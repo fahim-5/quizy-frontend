@@ -127,7 +127,7 @@ export default function Register() {
 
           <label className="block">
             <span className="text-sm text-gray-700 font-medium">
-              Institution
+              Institution 
             </span>
             <input
               name="institution"

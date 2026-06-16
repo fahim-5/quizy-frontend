@@ -351,7 +351,7 @@ export default function ManageQuestions() {
         <h3 className="text-lg font-semibold text-black">Quiz</h3>
         <div className="p-3 bg-white border border-gray-200 rounded-lg shadow-sm mt-2">
           <div className="font-medium text-black">
-            Title: {quiz?.title || `Quiz ${quizId}`}
+            Title: {quiz?.title ?? "Untitled Quiz"}
           </div>
           <div className="text-sm text-gray-700 mt-1">
             Duration:{" "}
@@ -379,81 +379,82 @@ export default function ManageQuestions() {
                   key={q._id || q.id}
                   className="p-3 bg-white border border-gray-200 rounded-lg shadow-sm"
                 >
-                  <div className="flex justify-between">
-                    <div className="flex-1">
-                      <div className="font-medium text-black">{q.text}</div>
-                      <div className="text-sm text-gray-700 mt-1">
-                        <div className="text-xs text-gray-500">
-                          Type: {q.type || "mcq"}
-                        </div>
-                        {q.type === "mcq" &&
-                          q.options?.map((o, i) => (
-                            <div key={i}>
-                              {i + 1}. {o.text}{" "}
-                              {q.correctIndex === i && (
-                                <span className="text-green-600">
-                                  (Correct)
-                                </span>
-                              )}
-                            </div>
-                          ))}
-                        {q.type === "tf" && (
-                          <div>
-                            Correct: {q.correctIndex === 1 ? "True" : "False"}
+                  {editing &&
+                  (editing._id || editing.id) === (q._id || q.id) ? (
+                    <div>
+                      <QuestionForm
+                        initial={editing}
+                        onSubmit={(data) =>
+                          updateQuestion(editing._id || editing.id, data)
+                        }
+                      />
+                      <div className="mt-2">
+                        <button
+                          onClick={() => setEditing(null)}
+                          className="text-sm text-gray-700 hover:text-black"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between">
+                      <div className="flex-1">
+                        <div className="font-medium text-black">{q.text}</div>
+                        <div className="text-sm text-gray-700 mt-1">
+                          <div className="text-xs text-gray-500">
+                            Type: {q.type || "mcq"}
                           </div>
-                        )}
-                        {/* Short answer type removed; only MCQ and TF shown */}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2 ml-4">
-                      <div className="text-sm text-gray-700">
-                        Points: {q.points ?? 1}
-                      </div>
-                      {q.extraTime ? (
-                        <div className="text-sm text-gray-700">
-                          Extra time: {q.extraTime}s
+                          {q.type === "mcq" &&
+                            q.options?.map((o, i) => (
+                              <div key={i}>
+                                {i + 1}. {o.text}{" "}
+                                {q.correctIndex === i && (
+                                  <span className="text-green-600">
+                                    (Correct)
+                                  </span>
+                                )}
+                              </div>
+                            ))}
+                          {q.type === "tf" && (
+                            <div>
+                              Correct: {q.correctIndex === 1 ? "True" : "False"}
+                            </div>
+                          )}
                         </div>
-                      ) : null}
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setEditing(q)}
-                          className="text-black hover:text-gray-700 text-sm underline"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => deleteQuestion(q._id || q.id)}
-                          className="text-red-600 hover:text-red-800 text-sm"
-                        >
-                          Delete
-                        </button>
+                      </div>
+                      <div className="flex flex-col items-end gap-2 ml-4">
+                        <div className="text-sm text-gray-700">
+                          Points: {q.points ?? 1}
+                        </div>
+                        {q.extraTime ? (
+                          <div className="text-sm text-gray-700">
+                            Extra time: {q.extraTime}s
+                          </div>
+                        ) : null}
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setEditing(q)}
+                            className="text-black hover:text-gray-700 text-sm underline"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteQuestion(q._id || q.id)}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </li>
               ))}
             </ul>
           )}
 
-          {editing && (
-            <div className="mt-4">
-              <h4 className="font-semibold text-black mb-2">Edit Question</h4>
-              <QuestionForm
-                initial={editing}
-                onSubmit={(data) =>
-                  updateQuestion(editing._id || editing.id, data)
-                }
-              />
-              <div className="mt-2">
-                <button
-                  onClick={() => setEditing(null)}
-                  className="text-sm text-gray-700 hover:text-black"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Editing form is rendered inline inside the list item */}
         </div>
       </div>
     </div>

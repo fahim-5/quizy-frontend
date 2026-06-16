@@ -97,7 +97,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link
-                  to="/teacher"
+                  to="/teachers"
                   className="text-gray-600 hover:text-black transition-colors text-sm"
                 >
                   Teacher Panel

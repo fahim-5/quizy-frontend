@@ -125,6 +125,7 @@ const Navbar = () => {
 
   const guestNav = [
     { name: "About", to: "/about" },
+    { name: "Teacher Panel", to: "/teachers" },
     { name: "Contact us", to: "/contact" },
   ];
 

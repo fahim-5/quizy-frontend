@@ -14,6 +14,7 @@ import AdminPanel from "../pages/AdminPanel";
 import TeacherQuizzes from "../pages/TeacherQuizzes";
 import Courses from "../pages/Courses";
 import CourseDetail from "../pages/CourseDetail";
+import Teachers from "../pages/Teachers";
 import ManageQuestions from "../pages/ManageQuestions";
 import QuizEditor from "../pages/QuizEditor";
 import LiveMonitor from "../pages/LiveMonitor";
@@ -50,6 +51,7 @@ export default function AppRoutes() {
       <Route path="/result" element={<Result />} />
       <Route path="/results" element={<ResultsHistory />} />
       <Route path="/teacher" element={<AdminPanel />} />
+      <Route path="/teachers" element={<Teachers />} />
       <Route path="/teacher/quizzes" element={<TeacherQuizzes />} />
       <Route path="/courses" element={<Courses />} />
       <Route path="/courses/:id" element={<CourseDetail />} />
