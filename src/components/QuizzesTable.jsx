@@ -77,7 +77,8 @@ export default function QuizzesTable({
                     {/* Edit and Copy removed per UX request */}
                     {typeof onMonitor === "function" ? (
                       <button
-                        className="px-2 py-1 bg-white border border-indigo-100 text-sm rounded hover:bg-indigo-50"
+                          //  monitor buttton hidden here ***********######
+                        className="hidden px-2 py-1 bg-white border border-indigo-100 text-sm rounded hover:bg-indigo-50"
                         onClick={() => onMonitor(q)}
                       >
                         Monitor

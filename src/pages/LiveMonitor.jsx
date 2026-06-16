@@ -11,6 +11,7 @@ export default function LiveMonitor() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [announceText, setAnnounceText] = useState("");
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -69,6 +70,35 @@ export default function LiveMonitor() {
     };
   }, [quizId]);
 
+  const exportCsv = async () => {
+    setExporting(true);
+    try {
+      const res = await api.get(`/quizzes/${quizId}/monitor/export`, {
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data], {
+        type: res.headers["content-type"] || "text/csv",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      // extract filename from header if present
+      const cd = res.headers["content-disposition"] || "";
+      const match = cd.match(/filename="?([^";]+)"?/);
+      a.download = match
+        ? match[1]
+        : `${(data && data.quiz && data.quiz.title) || "quiz"}-results.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err?.response?.data?.message || err.message || "Export failed");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const sendControl = async (action) => {
     try {
       await api.post(`/quizzes/${quizId}/monitor/control`, { action });
@@ -99,7 +129,21 @@ export default function LiveMonitor() {
 
   return (
     <div className="p-6 bg-white min-h-screen">
-      <h2 className="text-2xl font-bold mb-4">Live Monitor</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold">Live Monitor</h2>
+        <div className="flex items-center gap-3">
+          <div className="text-sm text-gray-600">
+            Attendance: {data?.participants?.length || 0}
+          </div>
+          <button
+            onClick={exportCsv}
+            disabled={exporting || !data?.participants?.length}
+            className="px-3 py-1 bg-black text-white rounded-md text-sm"
+          >
+            {exporting ? "Exporting..." : "Export CSV"}
+          </button>
+        </div>
+      </div>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-600 mb-3">{error}</div>}
 
@@ -121,8 +165,11 @@ export default function LiveMonitor() {
                     {p.status} • {new Date(p.joinedAt).toLocaleTimeString()}
                   </div>
                 </div>
-                <div className="text-sm text-gray-700">
-                  {p.answers?.length || 0}
+                <div className="text-sm text-gray-700 text-right">
+                  <div>{p.totalPoints || 0} pts</div>
+                  <div className="text-xs text-gray-500">
+                    {p.percent != null ? `${p.percent}%` : "—"}
+                  </div>
                 </div>
               </li>
             ))}
@@ -164,9 +211,30 @@ export default function LiveMonitor() {
           </div>
         </div>
 
-        {/* Right: controls */}
+        {/* Right: top performers + controls */}
         <div className="col-span-1 border p-3 rounded">
-          <h3 className="font-semibold">Controls</h3>
+          <h3 className="font-semibold">Top Performers</h3>
+          <div className="mt-2">
+            {data?.topPerformers?.length ? (
+              <ol className="list-decimal list-inside space-y-1">
+                {data.topPerformers.map((t) => (
+                  <li key={t._id} className="text-sm">
+                    <div className="font-medium">{t.name}</div>
+                    <div className="text-xs text-gray-500">
+                      {t.totalPoints} pts •{" "}
+                      {t.percent != null ? `${t.percent}%` : "—"}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="text-sm text-gray-500">
+                No top performers yet.
+              </div>
+            )}
+          </div>
+
+          <h3 className="font-semibold mt-4">Controls</h3>
           <div className="mt-3 flex flex-col gap-2">
             <button
               onClick={() => sendControl("pause")}

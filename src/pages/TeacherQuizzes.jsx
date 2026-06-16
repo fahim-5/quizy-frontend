@@ -187,6 +187,7 @@ export default function TeacherQuizzes() {
           onQuestions={handleQuestions}
           onCopy={handleCopy}
           onReport={handleReport}
+          onMonitor={handleMonitor}
           showJoinKey={true}
         />
       </div>

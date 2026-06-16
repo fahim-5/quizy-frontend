@@ -214,7 +214,7 @@ export default function TakeQuiz() {
 
   return (
     <div className="page take-quiz-page p-6">
-      {error && (
+      {error && !/join code/i.test(error) && (
         <div className="max-w-7xl mx-auto mb-4 p-3 bg-red-50 text-red-700 rounded">
           {error}
         </div>
@@ -222,7 +222,12 @@ export default function TakeQuiz() {
       {/* Join code prompt */}
       {error && /join code/i.test(error) && (
         <div className="max-w-md mx-auto mb-6 p-4 bg-white border rounded">
-          <label className="block text-sm font-medium text-black mb-2">
+          <div className="mb-3">
+            <div className="text-center bg-white text-black font-medium px-2 py-2 rounded">
+              {error}
+            </div>
+          </div>
+          <label className="block text-sm font-medium text-black mb-2 text-center">
             Enter join code
           </label>
           <div className="flex gap-2">
