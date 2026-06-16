@@ -1,0 +1,1 @@
+request only teacher's quizzes and additionally filter received quizzes client-side to ensure ownership. This prevents showing other teachers' quizzes when clicking "View all".
