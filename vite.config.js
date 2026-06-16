@@ -6,7 +6,8 @@ export default defineConfig({
   server: {
     port: 5173,
     open: false,
-    allowedHosts: ['sanitizer-removing-portly.ngrok-free.dev']
+    allowedHosts: ['sanitizer-removing-portly.ngrok-free.dev'],
+    base: process.env.VITE_BASE_PATH || '/quizy-frontend',
   }
 })
 

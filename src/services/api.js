@@ -7,8 +7,8 @@ import axios from "axios";
 const resolvedBase =
   (import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
   (import.meta.env && import.meta.env.MODE === "production"
-    ? "https://quizy-server-side.onrender.com/api"
-    : "http://localhost:5000/api");
+    ? "https://quizy-backend-zrrr.onrender.com/api"
+    : "http://localhost:5005/api");
 
 const api = axios.create({
   baseURL: resolvedBase,
